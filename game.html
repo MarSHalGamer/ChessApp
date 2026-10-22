@@ -37,7 +37,7 @@ body{background:#0f1419;color:#c9d1d9;font-family:'Montserrat',sans-serif;min-he
 <button class="btn" id="ng">New Game</button>
 </div>
 <script>
-const P={K:'♔',Q:'♕',R:'',B:'♗',N:'♘',P:'♙',k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'};
+const P={K:'',Q:'♕',R:'♖',B:'♗',N:'♘',P:'♙',k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'};
 const IB=[['r','n','b','q','k','b','n','r'],['p','p','p','p','p','p','p','p'],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],[null,null,null,null,null,null,null,null],['P','P','P','P','P','P','P','P'],['R','N','B','Q','K','B','N','R']];
 const PV={p:100,n:320,b:330,r:500,q:900,k:20000,P:100,N:320,B:330,R:500,Q:900,K:20000};
 let board=[],sel=null,vm=[],turn='white',over=false,elo=100,lm=null;
@@ -45,11 +45,11 @@ let board=[],sel=null,vm=[],turn='white',over=false,elo=100,lm=null;
 function init(){
 elo=parseInt(new URLSearchParams(window.location.search).get('elo'))||100;
 document.getElementById('elo').textContent=elo;
-reset();
-document.getElementById('ng').onclick=reset;
+startGame();
+document.getElementById('ng').addEventListener('click',startGame);
 }
 
-function reset(){
+function startGame(){
 board=IB.map(r=>[...r]);
 sel=null;vm=[];turn='white';over=false;lm=null;
 render();
