@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play - Chess</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #0f1419;
+            --light-text: #c9d1d9;
+            --accent: #58a6ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(88, 166, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(88, 166, 255, 0.03) 0%, transparent 50%);
+        }
+
+        .container {
+            text-align: center;
+            z-index: 1;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 60px;
+            letter-spacing: 3px;
+            color: var(--light-text);
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .btn {
+            padding: 40px 30px;
+            font-size: 1.4rem;
+            font-weight: 700;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid var(--light-text);
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 180px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(201, 209, 217, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .btn-online {
+            background-color: var(--light-text);
+            color: var(--dark-bg);
+            box-shadow: 0 4px 20px rgba(201, 209, 217, 0.15);
+        }
+
+        .btn-online:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(201, 209, 217, 0.25);
+        }
+
+        .btn-local {
+            background-color: transparent;
+            color: var(--light-text);
+            border: 2px solid rgba(201, 209, 217, 0.3);
+        }
+
+        .btn-local:hover {
+            border-color: var(--light-text);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(201, 209, 217, 0.1);
+        }
+
+        .btn:active {
+            transform: translateY(-2px);
+        }
+
+        .btn:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        .btn-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .btn-text {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* زر الرجوع */
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(201, 209, 217, 0.3);
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--light-text);
+            background-color: transparent;
+        }
+
+        .back-btn:hover {
+            border-color: var(--light-text);
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 768px) {
+            .buttons-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="index.html" class="back-btn">← Back</a>
+
+    <div class="container">
+        <h1>Choose Mode</h1>
+        
+        <div class="buttons-grid">
+            <a href="#" class="btn btn-online">
+                <div class="btn-icon">🌐</div>
+                <div class="btn-text">Play Online</div>
+            </a>
+            
+            <a href="#" class="btn btn-local">
+                <div class="btn-icon">👤</div>
+                <div class="btn-text">Play Local</div>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
