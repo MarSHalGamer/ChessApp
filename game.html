@@ -109,7 +109,6 @@
             border: 2px solid var(--light-text);
             font-family: 'Montserrat', sans-serif;
             text-transform: uppercase;
-            text-decoration: none;
             color: var(--light-text);
             background-color: transparent;
             width: 100%;
@@ -185,7 +184,7 @@
                 <div class="info-value">White</div>
             </div>
 
-            <button class="btn" onclick="resetGame()">New Game</button>
+            <button class="btn" id="new-game-btn">New Game</button>
         </div>
     </div>
 
@@ -373,14 +372,17 @@
             return -score;
         }
 
-        // إعادة اللعبة
+        // إعادة اللعبة - تم الإصلاح
         function resetGame() {
             game.reset();
             board.start();
             gameOver = false;
             updateStatus();
         }
+
+        // ربط الزر بالدالة
+        document.getElementById('new-game-btn').addEventListener('click', resetGame);
     </script>
 
 </body>
-</html>
+    </html>
