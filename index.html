@@ -3,31 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تم</title>
+    <title>شطرنج</title>
     <style>
-        body {
+        /* تعريف اللونين الأساسيين فقط */
+        :root {
+            --cardinal-red: #B3123F;
+            --atomic-yellow: #F2F05E;
+        }
+
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--cardinal-red);
+            color: var(--atomic-yellow);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #f4f7f6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            /* شبكة خفيفة جداً في الخلفية باستخدام اللون الأصفر فقط بشفافية */
+            background-image: 
+                linear-gradient(rgba(242, 240, 94, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(242, 240, 94, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
         }
-        .done-text {
-            font-size: 8em;
-            color: #28a745; /* لون أخضر جميل */
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            animation: fadeIn 2s ease-in-out;
+
+        .container {
+            text-align: center;
+            z-index: 1;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
+
+        /* أيقونة حصان الشطرنج */
+        .logo-icon {
+            font-size: 7rem;
+            color: var(--atomic-yellow);
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(242, 240, 94, 0.4);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 60px;
+            letter-spacing: 4px;
+            color: var(--atomic-yellow);
+            font-weight: 900;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 18px 70px;
+            font-size: 1.6rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 280px;
+            border: 3px solid var(--atomic-yellow);
+            font-family: inherit;
+            letter-spacing: 1px;
+        }
+
+        /* زر اللعب (معبأ باللون الأصفر) */
+        .btn-play {
+            background-color: var(--atomic-yellow);
+            color: var(--cardinal-red);
+        }
+
+        .btn-play:hover {
+            background-color: transparent;
+            color: var(--atomic-yellow);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(242, 240, 94, 0.5);
+        }
+
+        /* زر الإعدادات (فارغ ومحدد بالأصفر) */
+        .btn-settings {
+            background-color: transparent;
+            color: var(--atomic-yellow);
+        }
+
+        .btn-settings:hover {
+            background-color: var(--atomic-yellow);
+            color: var(--cardinal-red);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(242, 240, 94, 0.5);
+        }
+
+        /* إزالة الإطار الافتراضي عند الضغط وإضافة إطار بلون الموقع */
+        .btn:focus {
+            outline: 3px solid var(--atomic-yellow);
+            outline-offset: 4px;
         }
     </style>
 </head>
 <body>
-    <div class="done-text">تم</div>
+
+    <div class="container">
+        <!-- أيقونة حصان الشطرنج -->
+        <div class="logo-icon">♞</div>
+        <h1>شطرنج</h1>
+        
+        <div class="buttons-container">
+            <!-- الأزرار حالياً لا تحتوي على أي وظائف (onclick) -->
+            <button class="btn btn-play">لعب</button>
+            <button class="btn btn-settings">الاعدادات</button>
+        </div>
+    </div>
+
 </body>
 </html>
