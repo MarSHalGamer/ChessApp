@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Local - Chess</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #0f1419;
+            --light-text: #c9d1d9;
+            --accent: #58a6ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            padding: 40px 20px;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(88, 166, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(88, 166, 255, 0.03) 0%, transparent 50%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            letter-spacing: 3px;
+            color: var(--light-text);
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: rgba(201, 209, 217, 0.6);
+            font-weight: 400;
+        }
+
+        .elo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .elo-card {
+            background: rgba(201, 209, 217, 0.03);
+            border: 2px solid rgba(201, 209, 217, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            color: var(--light-text);
+            display: block;
+        }
+
+        .elo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(201, 209, 217, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .elo-card:hover::before {
+            opacity: 1;
+        }
+
+        .elo-card:hover {
+            border-color: var(--light-text);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(201, 209, 217, 0.15);
+        }
+
+        .elo-card:active {
+            transform: translateY(-2px);
+        }
+
+        .elo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .elo-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--light-text);
+        }
+
+        .elo-label {
+            font-size: 0.9rem;
+            color: rgba(201, 209, 217, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .difficulty-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(201, 209, 217, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .difficulty-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--light-text) 0%, rgba(201, 209, 217, 0.6) 100%);
+            border-radius: 10px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .difficulty-label {
+            font-size: 0.85rem;
+            color: rgba(201, 209, 217, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* زر الرجوع */
+        .back-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(201, 209, 217, 0.3);
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--light-text);
+            background-color: var(--dark-bg);
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            border-color: var(--light-text);
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .elo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="play.html" class="back-btn">← Back</a>
+
+    <div class="container">
+        <div class="header">
+            <h1>Select Elo</h1>
+            <p class="subtitle">Choose your opponent's rating</p>
+        </div>
+        
+        <div class="elo-grid">
+            <a href="#" class="elo-card">
+                <div class="elo-header">
+                    <div class="elo-number">100</div>
+                    <div class="elo-label">Elo</div>
+                </div>
+                <div class="difficulty-bar">
+                    <div class="difficulty-fill" style="width: 5%;"></div>
+                </div>
+                <div class="difficulty-label">Beginner</div>
+            </a>
+
+            <a href="#" class="elo-card">
+                <div class="elo-header">
+                    <div class="elo-number">300</div>
+                    <div class="elo-label">Elo</div>
+                </div>
+                <div class="difficulty-bar">
+                    <div class="difficulty-fill" style="width: 15%;"></div>
+                </div>
+                <div class="difficulty-label">Easy</div>
+            </a>
+
+            <a href="#" class="elo-card">
+                <div class="elo-header">
+                    <div class="elo-number">500</div>
+                    <div class="elo-label">Elo</div>
+                </div>
+                <div class="difficulty-bar">
+                    <div class="difficulty-fill" style="width: 25%;"></div>
+                </div>
+                <div class="difficulty-label">Medium</div>
+            </a>
+
+            <a href="#" class="elo-card">
+                <div class="elo-header">
+                    <div class="elo-number">700</div>
+                    <div class="elo-label">Elo</div>
+                </div>
+                <div class="difficulty-bar">
+                    <div class="difficulty-fill" style="width: 35%;"></div>
+                </div>
+                <div class="difficulty-label">Medium</div>
+            </a>
+
+            <a href="#" class="elo-card">
+                <div class="elo-header">
+                    <div class="elo-number">1000</div>
+                    <div class="elo-label">Elo</div>
+                </div>
+                <div class="difficulty-bar">
+                    <div class="difficulty-fill" style="width: 50%;"></div>
+                </div>
+                <div class="difficulty-label">Hard</div>
+            </a>
+
+            <a href="#" class="elo-card">
+                <div class="elo-header">
+                    <div class="elo-number">1500</div>
+                    <div class="elo-label">Elo</div>
+                </div>
+                <div class="difficulty-bar">
+                    <div class="difficulty-fill" style="width: 75%;"></div>
+                </div>
+                <div class="difficulty-label">Very Hard</div>
+            </a>
+
+            <a href="#" class="elo-card">
+                <div class="elo-header">
+                    <div class="elo-number">2000</div>
+                    <div class="elo-label">Elo</div>
+                </div>
+                <div class="difficulty-bar">
+                    <div class="difficulty-fill" style="width: 100%;"></div>
+                </div>
+                <div class="difficulty-label">Expert</div>
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>
