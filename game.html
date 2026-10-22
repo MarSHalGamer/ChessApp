@@ -190,27 +190,42 @@
 
     <script>
         // متغيرات اللعبة
-        let game = new Chess();
+        let game = null;
         let board = null;
         let elo = 100;
         let gameOver = false;
 
-        // الحصول على مستوى Elo من الرابط
-        const urlParams = new URLSearchParams(window.location.search);
-        elo = parseInt(urlParams.get('elo')) || 100;
-        document.getElementById('elo-display').textContent = elo;
+        // دالة التهيئة - تشتغل لما الصفحة تتحمل بالكامل
+        function initGame() {
+            // الحصول على مستوى Elo من الرابط
+            const urlParams = new URLSearchParams(window.location.search);
+            elo = parseInt(urlParams.get('elo')) || 100;
+            document.getElementById('elo-display').textContent = elo;
 
-        // إعداد الرقعة
-        const config = {
-            draggable: true,
-            position: 'start',
-            pieceTheme: 'https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/img/chesspieces/wikipedia/{piece}.png',
-            onDragStart: onDragStart,
-            onDrop: onDrop,
-            onSnapEnd: onSnapEnd
-        };
+            // إنشاء لعبة جديدة
+            game = new Chess();
 
-        board = Chessboard('board', config);
+            // إعداد الرقعة
+            const config = {
+                draggable: true,
+                position: 'start',
+                pieceTheme: 'https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/img/chesspieces/wikipedia/{piece}.png',
+                onDragStart: onDragStart,
+                onDrop: onDrop,
+                onSnapEnd: onSnapEnd
+            };
+
+            board = Chessboard('board', config);
+
+            // تحديث الحالة الأولية
+            updateStatus();
+
+            // ربط زر New Game
+            const newGameBtn = document.getElementById('new-game-btn');
+            if (newGameBtn) {
+                newGameBtn.addEventListener('click', resetGame);
+            }
+        }
 
         // منع السحب إذا انتهت اللعبة
         function onDragStart(source, piece, position, orientation) {
@@ -380,9 +395,13 @@
             updateStatus();
         }
 
-        // ربط الزر بالدالة
-        document.getElementById('new-game-btn').addEventListener('click', resetGame);
+        // تشغيل اللعبة لما الصفحة تتحمل بالكامل
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initGame);
+        } else {
+            initGame();
+        }
     </script>
 
 </body>
-    </html>
+</html>
