@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- مكتبات الشطرنج من الإنترنت -->
+    <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"></script>
+    <script src="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+    
+    <style>
+        :root {
+            --dark-bg: #0f1419;
+            --light-text: #c9d1d9;
+            --accent: #58a6ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--light-text);
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(88, 166, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(88, 166, 255, 0.03) 0%, transparent 50%);
+        }
+
+        .game-container {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        .board-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #board {
+            width: 600px;
+            border: 3px solid var(--light-text);
+            border-radius: 8px;
+            box-shadow: 0 8px 40px rgba(201, 209, 217, 0.2);
+        }
+
+        .info-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-width: 250px;
+        }
+
+        .info-box {
+            background: rgba(201, 209, 217, 0.03);
+            border: 2px solid rgba(201, 209, 217, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .info-title {
+            font-size: 0.9rem;
+            color: rgba(201, 209, 217, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .info-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--light-text);
+        }
+
+        .status {
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            padding: 15px;
+            background: rgba(201, 209, 217, 0.05);
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--light-text);
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--light-text);
+            background-color: transparent;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background-color: var(--light-text);
+            color: var(--dark-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(201, 209, 217, 0.2);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(201, 209, 217, 0.3);
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--light-text);
+            background-color: var(--dark-bg);
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            border-color: var(--light-text);
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 1024px) {
+            .game-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #board {
+                width: 100%;
+                max-width: 500px;
+            }
+
+            .info-section {
+                width: 100%;
+                max-width: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="local.html" class="back-btn">← Back</a>
+
+    <div class="game-container">
+        <div class="board-section">
+            <div id="board"></div>
+            <div class="status" id="status">Your turn</div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-box">
+                <div class="info-title">Opponent Elo</div>
+                <div class="info-value" id="elo-display">100</div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title">Your Color</div>
+                <div class="info-value">White</div>
+            </div>
+
+            <button class="btn" onclick="resetGame()">New Game</button>
+        </div>
+    </div>
+
+    <script>
+        // متغيرات اللعبة
+        let game = new Chess();
+        let board = null;
+        let elo = 100;
+        let gameOver = false;
+
+        // الحصول على مستوى Elo من الرابط
+        const urlParams = new URLSearchParams(window.location.search);
+        elo = parseInt(urlParams.get('elo')) || 100;
+        document.getElementById('elo-display').textContent = elo;
+
+        // إعداد الرقعة
+        const config = {
+            draggable: true,
+            position: 'start',
+            pieceTheme: 'https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/img/chesspieces/wikipedia/{piece}.png',
+            onDragStart: onDragStart,
+            onDrop: onDrop,
+            onSnapEnd: onSnapEnd
+        };
+
+        board = Chessboard('board', config);
+
+        // منع السحب إذا انتهت اللعبة
+        function onDragStart(source, piece, position, orientation) {
+            if (gameOver) return false;
+            if (game.game_over()) return false;
+            if (game.turn() === 'b') return false; // دور الكمبيوتر
+        }
+
+        // عند إسقاط القطعة
+        function onDrop(source, target) {
+            const move = game.move({
+                from: source,
+                to: target,
+                promotion: 'q' // ترقية تلقائية لوزير
+            });
+
+            if (move === null) return 'snapback';
+
+            updateStatus();
+
+            // دور الكمبيوتر بعد تأخير بسيط
+            if (!gameOver) {
+                setTimeout(makeComputerMove, 500);
+            }
+        }
+
+        // تحديث موقع القطعة
+        function onSnapEnd() {
+            board.position(game.fen());
+        }
+
+        // تحديث حالة اللعبة
+        function updateStatus() {
+            const status = document.getElementById('status');
+            
+            if (game.in_checkmate()) {
+                gameOver = true;
+                status.textContent = game.turn() === 'w' ? 'Checkmate - You lose!' : 'Checkmate - You win!';
+                status.style.color = game.turn() === 'w' ? '#ff6b6b' : '#51cf66';
+            } else if (game.in_draw()) {
+                gameOver = true;
+                status.textContent = 'Draw!';
+                status.style.color = '#ffd43b';
+            } else if (game.in_check()) {
+                status.textContent = game.turn() === 'w' ? 'Check! Your turn' : 'Check! Computer thinking...';
+                status.style.color = '#ff922b';
+            } else {
+                status.textContent = game.turn() === 'w' ? 'Your turn' : 'Computer thinking...';
+                status.style.color = 'var(--light-text)';
+            }
+        }
+
+        // حركة الكمبيوتر
+        function makeComputerMove() {
+            if (game.game_over() || gameOver) return;
+
+            const moves = game.moves();
+            let bestMove = null;
+
+            // حسب المستوى، نختار خوارزمية مختلفة
+            if (elo <= 700) {
+                // حركات عشوائية
+                bestMove = moves[Math.floor(Math.random() * moves.length)];
+            } else if (elo <= 1500) {
+                // Minimax عمق 2-3
+                bestMove = getBestMove(elo <= 1000 ? 2 : 3);
+            } else {
+                // Minimax عمق 4
+                bestMove = getBestMove(4);
+            }
+
+            if (bestMove) {
+                game.move(bestMove);
+                board.position(game.fen());
+                updateStatus();
+            }
+        }
+
+        // خوارزمية Minimax
+        function getBestMove(depth) {
+            let bestMove = null;
+            let bestScore = -Infinity;
+            const moves = game.moves();
+
+            for (const move of moves) {
+                game.move(move);
+                const score = minimax(depth - 1, -Infinity, Infinity, false);
+                game.undo();
+
+                if (score > bestScore) {
+                    bestScore = score;
+                    bestMove = move;
+                }
+            }
+
+            return bestMove;
+        }
+
+        function minimax(depth, alpha, beta, isMaximizing) {
+            if (depth === 0 || game.game_over()) {
+                return evaluatePosition();
+            }
+
+            const moves = game.moves();
+
+            if (isMaximizing) {
+                let maxScore = -Infinity;
+                for (const move of moves) {
+                    game.move(move);
+                    const score = minimax(depth - 1, alpha, beta, false);
+                    game.undo();
+                    maxScore = Math.max(maxScore, score);
+                    alpha = Math.max(alpha, score);
+                    if (beta <= alpha) break;
+                }
+                return maxScore;
+            } else {
+                let minScore = Infinity;
+                for (const move of moves) {
+                    game.move(move);
+                    const score = minimax(depth - 1, alpha, beta, true);
+                    game.undo();
+                    minScore = Math.min(minScore, score);
+                    beta = Math.min(beta, score);
+                    if (beta <= alpha) break;
+                }
+                return minScore;
+            }
+        }
+
+        // تقييم الموقف
+        function evaluatePosition() {
+            const pieceValues = {
+                'p': 100,
+                'n': 320,
+                'b': 330,
+                'r': 500,
+                'q': 900,
+                'k': 20000
+            };
+
+            let score = 0;
+            const board = game.board();
+
+            for (const row of board) {
+                for (const square of row) {
+                    if (square) {
+                        const value = pieceValues[square.type];
+                        if (square.color === 'w') {
+                            score += value;
+                        } else {
+                            score -= value;
+                        }
+                    }
+                }
+            }
+
+            // الكمبيوتر يلعب بالأسود
+            return -score;
+        }
+
+        // إعادة اللعبة
+        function resetGame() {
+            game.reset();
+            board.start();
+            gameOver = false;
+            updateStatus();
+        }
+    </script>
+
+</body>
+</html>
